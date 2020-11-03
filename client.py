@@ -1,6 +1,6 @@
 """
 TODO:
-    - Add device
+    - Add device MISSING adding topic for new device communication
     - Communication device/broker
     - Communication broker/client
     - Configuration of the server ????? 
