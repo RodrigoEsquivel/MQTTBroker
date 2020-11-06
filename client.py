@@ -1,12 +1,12 @@
 """
 TODO:
-    - Add device MISSING adding topic for new device communication
-    - Communication device/broker
-    - Communication broker/client
+    - Add device MISSING add listener for actuators, alarm and camera
+    - Communication device/broker 
+    - Communication broker/client MISSING lookup in db
     - Configuration of the server ????? 
     - Backup of the server 
-    -Connection to db
-    -DB CRUD
+    -Connection to db DONE  
+    -DB CRUD DONE 
 """
 import os
 import paho.mqtt.client as mqtt

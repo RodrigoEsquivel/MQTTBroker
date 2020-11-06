@@ -8,6 +8,10 @@ class Database:
     sensor_table = "Sensores"
     alarma_table = "Alarma"
     camara_table = "Camara"
+    camara_foreign_key = "Actuadores_ID"
+    actuadores_foreign_key = "Dispositivo_ID"
+    alarma_foreign_key = "Actuadores_ID"
+    sensores_foreign_key = "Dispositivo_ID"
 
     def __init__(self):
         self.connection = None
@@ -74,22 +78,23 @@ class Database:
             "INSERT INTO " + table + " VALUES (null, ?,?)", values)
 
     @commit_change
-    def update_row(self, table, id, new_values):
+    def update_row(self, table, foreign_column, id, new_values):
         column_names = self.cursor.execute(
             "SELECT * FROM " + table + " LIMIT 1")
-
         col_name = [i[0] for i in column_names.description][1:]
         set_query = []
-        print(new_values)
         for index in range(len(new_values)):
             if not new_values[index]:
                 continue
-            set_query.append(col_name[index] +
-                             " = '" + new_values[index] + "'")
-        set_query = ','.join(set_query)
-
-        self.cursor.execute(
-            "UPDATE " + table + " SET " + set_query + " WHERE ID = " + id)
+            query = ""
+            if isinstance(new_values[index], str):
+                query = f"{col_name[index]} = '{new_values[index]}'"
+            else:
+                query = f"{col_name[index]} = {new_values[index]}"
+            set_query.append(query)
+        final_query = ','.join(set_query)
+        parsed_query = f"UPDATE {table} SET {final_query} WHERE {foreign_column} = {id}"
+        self.cursor.execute(parsed_query)
 
     @commit_change
     def delete_from(self, table, ids):
