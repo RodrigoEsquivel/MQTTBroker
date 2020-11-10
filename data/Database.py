@@ -107,6 +107,23 @@ class Database:
     def get_from(self, column, table, column_condition, value_condition):
         get_query = f"SELECT {column} FROM {table} WHERE {column_condition} = '{value_condition}'"
         return list(self.cursor.execute(get_query))
+        
+    
+    def get_id_from_dispositivo_with_topic(self, topic):
+        return self.get_from("ID", Database.dispositivo_table, "Direccion", topic)[0][0]
+        
+    def get_id_from_actuador_with_device_id(self, device_id):
+        return self.get_from("ID", Database.actuador_table, "Dispositivo_ID", device_id)[0][0]
+        
+    def update_actuadores_with(self, device_id, new_state):
+        self.update_row(Database.actuador_table, Database.actuadores_foreign_key, device_id,[int(new_state),None])
+    
+    def update_sensor_table_using(self, device_id, sensor_value):
+        self.update_row(Database.sensor_table, Database.sensores_foreign_key,device_id, [float(sensor_value),None])
+    
+    def update_alarma_table_using(self,actuador_id, new_message):
+        self.update_row(Database.alarma_table, Database.alarma_foreign_key ,actuador_id,[new_message,None])
+        
 
     def commit_change(self):
         self.connection.commit()

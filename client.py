@@ -1,10 +1,9 @@
 """
 TODO:
-    - Add device MISSING add listener for actuators, alarm and camera
-    - Communication device/broker 
-    - Communication broker/client MISSING lookup in db
+    - Add device DONE 
+    - Communication broker/client MISSING GET 
     - Configuration of the server ????? 
-    - Backup of the server 
+    - Backup of the server MISSING restore mqtt channels from database
     -Connection to db DONE  
     -DB CRUD DONE 
 """
