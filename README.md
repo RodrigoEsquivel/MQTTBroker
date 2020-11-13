@@ -17,6 +17,10 @@
 - set value as client
     1. Open a terminal and run this command <br>
     ```mosquitto_pub -h localhost -p 1883 -t "Comunicacion" -m "set /SAM/APuerta/AP1 9"```
+
+- get value as client
+    1. Open a terminal and run this command <br>
+    ``` mosquitto_pub -h localhost -p 1883 -t "Comunicacion" -m "get /SAM/STemperatura/ST1"    ```
 - listen to message published by server
     1. Open a terminal and run this command with an id that refers to an actuator in the database (not a camera) <br>```mosquitto_sub -h localhost -t "/SAM/AAlarma/AA1"``` 
 
