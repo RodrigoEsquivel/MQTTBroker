@@ -6,12 +6,7 @@ from utils.parsers import get_device_type, mqtt_to_string, get_tokens_from_clien
 from subscriber.SubEntity import SubEntity
 from publisher.PubEntity import PubEntity
 
-from utils.constants import SERVER_IP, SERVER_PORT, SERVER_USER, SERVER_PASSWORD, NEW_DEVICES_SUBSCRIBER_NAME, NEW_DEVICES_TOPIC, CLIENT_SUBSCRIBER_NAME
-
-"""
-Idea to process CACHE
-Use decorators to check the database before calling the method insert 
-""" 
+from utils.constants import SERVER_IP, SERVER_PORT, SERVER_USER, SERVER_PASSWORD, NEW_DEVICES_SUBSCRIBER_NAME, NEW_DEVICES_TOPIC, CLIENT_SUBSCRIBER_NAME, CLIENT_TOPIC
 
 def insert_new_device(client, userdata, message):
     device_name = str(message.payload.decode("utf-8"))
@@ -69,13 +64,22 @@ def listen_client(client, userdata, message):
     #set /SAM/APuerta/AP1 on
     #https://www.hackerearth.com/practice/python/functional-programming/higher-order-functions-and-decorators/tutorial/
     (method, topic, parameters) = get_tokens_from_client(mqtt_to_string(message))
+    device_type = get_device_type(topic)
+    database_connection = Database()
     if method == "get":
-        #Search into the database 
-        pass
+        if device_type in (Devices.Sensor, Devices.Camara):
+            device_id = database_connection.get_id_from_dispositivo_with_topic(topic)
+            valor = None 
+            if device_type == Devices.Sensor:
+                valor = database_connection.get_valor_from_sensores_with_device_id(device_id)
+            elif device_type == Devices.Camara:
+                actuador_id = database_connection.get_id_from_actuador_with_device_id(device_id)
+                valor = database_connection.get_archivo_from_camara_with_actuador_id(actuador_id)
+            pub = PubEntity(CLIENT_SUBSCRIBER_NAME, SERVER_IP, SERVER_PORT, SERVER_USER, SERVER_PASSWORD)
+            print(f"ENTERED HERE {topic} {valor}")
+            pub.connect_and_publish_to_topic(CLIENT_TOPIC, f"{topic} {valor}")
     elif method == "set":
-        device_type = get_device_type(topic)
         if device_type not in (Devices.Sensor, Devices.Camara):
-            database_connection = Database()
             # TODO: Validate non integer values
             if device_type == Devices.Other:
                 device_id = database_connection.get_id_from_dispositivo_with_topic(topic)
@@ -86,8 +90,3 @@ def listen_client(client, userdata, message):
                 database_connection.update_alarma_table_using(actuador_id, parameters)
             pub = PubEntity(CLIENT_SUBSCRIBER_NAME, SERVER_IP, SERVER_PORT, SERVER_USER, SERVER_PASSWORD)
             pub.connect_and_publish_to_topic(topic, parameters)
-        
-
-def my_on_message(client, userdata, message):
-    print("message received " ,str(message.payload.decode("utf-8")))
-    print("message topic=",message.topic)   

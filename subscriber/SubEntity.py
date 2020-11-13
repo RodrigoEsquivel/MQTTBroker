@@ -26,7 +26,7 @@ class SubEntity:
         while True:
             client.loop_start()
             client.subscribe(topic)
-            time.sleep(10)
+            time.sleep(0.1)
 
     def connect_and_subscribe_to_topic(self, topic, on_message_function):
         self.topic = topic

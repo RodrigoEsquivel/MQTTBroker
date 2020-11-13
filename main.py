@@ -1,3 +1,14 @@
+"""
+TODO:
+    - Add device DONE 
+    - Communication broker/client MISSING GET 
+    - Configuration of the server ????? 
+    - Backup of the server MISSING restore mqtt channels from database
+    -Connection to db DONE  
+    -DB CRUD DONE 
+    -REFACTOR HARDCODED QUERIES
+"""
+
 from broker.Server import Server
 from subscriber.SubEntity import SubEntity
 from utils.on_messages import insert_new_device, listen_client

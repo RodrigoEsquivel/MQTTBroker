@@ -104,6 +104,9 @@ class Database:
     def select_all_from(self, table):
         return list(self.cursor.execute("SELECT * FROM " + table))
         
+    def select_all_from_column(self, table, column):
+        return list(self.cursor.execute(f"SELECT {column} FROM {table}"))
+        
     def get_from(self, column, table, column_condition, value_condition):
         get_query = f"SELECT {column} FROM {table} WHERE {column_condition} = '{value_condition}'"
         return list(self.cursor.execute(get_query))
@@ -115,6 +118,15 @@ class Database:
     def get_id_from_actuador_with_device_id(self, device_id):
         return self.get_from("ID", Database.actuador_table, "Dispositivo_ID", device_id)[0][0]
         
+    def get_valor_from_sensores_with_device_id(self, device_id):
+        return self.get_from("Valor", Database.sensor_table, "Dispositivo_ID", device_id)[0][0]
+        
+    def get_archivo_from_camara_with_actuador_id(self, actuador_id):
+        return self.get_from("Archivo", Database.camara_table, "Actuadores_ID", actuador_id)[0][0]
+        
+    def get_all_topics(self):
+        return self.select_all_from_column(Database.dispositivo_table,"Direccion")
+    
     def update_actuadores_with(self, device_id, new_state):
         self.update_row(Database.actuador_table, Database.actuadores_foreign_key, device_id,[int(new_state),None])
     
@@ -123,6 +135,7 @@ class Database:
     
     def update_alarma_table_using(self,actuador_id, new_message):
         self.update_row(Database.alarma_table, Database.alarma_foreign_key ,actuador_id,[new_message,None])
+
         
 
     def commit_change(self):
