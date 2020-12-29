@@ -8,15 +8,15 @@
     /AP/4712  1 Other
     /AE/ASDA  1 Sensor
     /AA/RTYU  4 Alarma
-    /AC/JKTI  3 Camara 
+    /AC/JKTI  3 Camara
 
+- listen and insert value on database from topic
+    1. Select a valid topic from the devices table
+    2. Publish a value for that device in its topic ```mosquitto_pub -h localhost -p 1883 -t "/ST/T612" -m "10" ```
 
+- delete a device
+    1. Select a valid device from the devices table
+    2. Publish that device's id to the "BorrarDispositivo" topic ```mosquitto_pub -h localhost -p 1883 -t "BorrarDispositivo" -m "/ST/T612 ```
 
-
-- get value as client
-    1. Open a terminal and run this command <br>
-    ``` mosquitto_pub -h localhost -p 1883 -t "Comunicacion" -m "get /SAM/STemperatura/ST1"    ```
-- listen to message published by server
-    1. Open a terminal and run this command with an id that refers to an actuator in the database (not a camera) <br>```mosquitto_sub -h localhost -t "/SAM/AAlarma/AA1"``` 
 
     
