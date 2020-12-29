@@ -15,5 +15,5 @@ class PubEntity:
 
     def connect_and_publish_to_topic(self, topic, value):
         self.__connect()
-        self.client.publish(topic, value)
+        self.client.publish(topic, payload=value, retain=True)
         

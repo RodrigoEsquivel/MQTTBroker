@@ -1,19 +1,23 @@
+import re
 from utils.constants import Devices 
 
 def get_device_type(string):
     """
     Types of devices: 
-    /SAM/STemperatura/ST1  2 Sensor
-    /SAM/SPresencia/SP1    2
-    /SAM/SLiquido/SL1      2
-    /SAM/APuerta/AP1       1 Other 
-    /SAM/AEncendido/AE1    1
-    /SAM/AAlarma/AA1       4 Alarma
-    /SAM/ACamara/AC1       3 Camara
+   
+
+       #gb
+    /ST/T612  2 Sensor
+    /SP/Y481  2 Sensor  
+    /SL/3781  2
+    /AP/4712  1 Other
+    /AE/ASDA  1 Sensor
+    /AA/RTYU  4 Alarma
+    /AC/JKTI  3 Camara  
+
     """
     tokens = string.split('/')
-    # _, used to ignore the spaces before the first / 
-    (_, project_name, device_name, device_id) = tokens
+    (_, device_id, _) = tokens
     device_type = device_id[0]
     if device_type == 'A':
         special_device = device_id[1]
@@ -24,7 +28,9 @@ def get_device_type(string):
         else:
             return Devices.Other
     return Devices.Sensor
-    
+
+def is_client(message):
+    return bool(re.match(r"^/Cliente/C[0-9][0-9]$",message)) 
 
 def mqtt_to_string(mqtt_message):
     return str(mqtt_message.payload.decode("utf-8"))

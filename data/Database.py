@@ -101,6 +101,12 @@ class Database:
         self.cursor.executemany(
             "DELETE FROM " + table + " WHERE ID = ?", ids)
 
+    @commit_change
+    def delete_from_single(self, table, row_id):
+        delete_query = f"DELETE FROM {table} WHERE ID = {row_id}"
+        print(delete_query)
+        self.cursor.execute(delete_query)
+
     def select_all_from(self, table):
         return list(self.cursor.execute("SELECT * FROM " + table))
         
@@ -117,6 +123,15 @@ class Database:
         
     def get_id_from_actuador_with_device_id(self, device_id):
         return self.get_from("ID", Database.actuador_table, "Dispositivo_ID", device_id)[0][0]
+
+    def get_id_from_sensores_with_device_id(self, device_id):
+        return self.get_from("ID", Database.sensor_table, "Dispositivo_ID", device_id)[0][0]
+
+    def get_id_from_camara_with_actuador_id(self, actuador_id):
+        return self.get_from("ID", Database.camara_table, "Actuadores_ID", actuador_id)[0][0] 
+
+    def get_id_from_alarma_with_actuador_id(self, actuador_id):
+        return self.get_from("ID", Database.alarma_table, "Actuadores_ID", actuador_id)[0][0]       
         
     def get_valor_from_sensores_with_device_id(self, device_id):
         return self.get_from("Valor", Database.sensor_table, "Dispositivo_ID", device_id)[0][0]
@@ -127,7 +142,7 @@ class Database:
     def get_all_topics(self):
         return self.select_all_from_column(Database.dispositivo_table,"Direccion")
     
-    def update_actuadores_with(self, device_id, new_state):
+    def update_actuadores_using(self, device_id, new_state):
         self.update_row(Database.actuador_table, Database.actuadores_foreign_key, device_id,[int(new_state),None])
     
     def update_sensor_table_using(self, device_id, sensor_value):

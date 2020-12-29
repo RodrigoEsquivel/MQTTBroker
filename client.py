@@ -7,6 +7,13 @@ TODO:
     -Connection to db DONE  
     -DB CRUD DONE 
     -REFACTOR HARDCODED QUERIES
+
+    2
+    -modify parser DONE
+    -VERIFY CLIENT ID
+    -MODIFY NUEVOSDISPOSITIVOS TO SUBSCRIBE TO ALL TOPICS AND UPDATE ON MESSAGES
+    -BorrarDispositivo Topic and logic 
+    -setup retained messages
 """
 import os
 import paho.mqtt.client as mqtt
