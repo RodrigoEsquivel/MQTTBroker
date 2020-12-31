@@ -120,14 +120,13 @@ def delete_device(client, userdata, message):
         database_connection.delete_from_single(Database.dispositivo_table,device_id)
     publish_all_devices()
 
+    """
 def listen_client(client, userdata, message):
+    
     if is_client(mqtt_to_string(message)):
         print("*******")
-        new_devices_sub = SubEntity(NEW_DEVICES_SUBSCRIBER_NAME, SERVER_IP, SERVER_PORT, SERVER_USER, SERVER_PASSWORD)
-        new_devices_sub.connect_and_subscribe_to_topic(NEW_DEVICES_TOPIC , insert_new_device)    
-        delete_devices_sub = SubEntity(DELETE_DEVICES_SUBSCRIBER_NAME, SERVER_IP, SERVER_PORT, SERVER_USER, SERVER_PASSWORD)
-        delete_devices_sub.connect_and_subscribe_to_topic(DELETE_DEVICES_TOPIC , delete_device)
-    """
+        
+    
     (method, topic, parameters) = get_tokens_from_client(mqtt_to_string(message))
     device_type = get_device_type(topic)
     database_connection = Database()
