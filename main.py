@@ -23,7 +23,7 @@ from utils.on_messages import insert_new_device, publish_all_devices, delete_dev
 from utils.constants import SERVER_IP, SERVER_PORT, SERVER_USER, SERVER_PASSWORD, NEW_DEVICES_SUBSCRIBER_NAME, NEW_DEVICES_TOPIC, CLIENT_SUBSCRIBER_NAME, CLIENT_TOPIC, DELETE_DEVICES_SUBSCRIBER_NAME, DELETE_DEVICES_TOPIC
 
 main_server = Server()
-publish_all_devices()
+#publish_all_devices()
 #new_devices_sub = SubEntity(NEW_DEVICES_SUBSCRIBER_NAME, SERVER_IP, SERVER_PORT, SERVER_USER, SERVER_PASSWORD)
 #new_devices_sub.connect_and_subscribe_to_topic(NEW_DEVICES_TOPIC , insert_new_device)
 
