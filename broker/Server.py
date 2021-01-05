@@ -7,7 +7,7 @@ from utils.constants import Devices
 from utils.on_messages import general_listen_and_insert
 from utils.parsers import get_device_type
 from subscriber.SubEntity import SubEntity
-from utils.constants import SERVER_IP, SERVER_PORT, SERVER_USER, SERVER_PASSWORD, NEW_DEVICES_SUBSCRIBER_NAME, NEW_DEVICES_TOPIC, CLIENT_SUBSCRIBER_NAME, CLIENT_TOPIC
+from utils.constants import SUDO_PASSWORD, SERVER_IP, SERVER_PORT, SERVER_USER, SERVER_PASSWORD, NEW_DEVICES_SUBSCRIBER_NAME, NEW_DEVICES_TOPIC, CLIENT_SUBSCRIBER_NAME, CLIENT_TOPIC
 
 class Server: 
     def __init__(self, ip="localhost", port="1883", new_device_topic="/SAM/nuevosDispositivos"):
@@ -18,10 +18,9 @@ class Server:
         self.__recover_mosquitto_topics()
     
     def __start_server(self):
-        sudoPassword = '1234'
         command = 'systemctl enable mosquitto'
         # A successful command returns a 0
-        mosquito_enable_result = os.system('echo %s|sudo -S %s' % (sudoPassword, command))
+        mosquito_enable_result = os.system('echo %s|sudo -S %s' % (SUDO_PASSWORD, command))
         mosquito_running = "mosquitto" in (process.name() for process in psutil.process_iter())
 
         if mosquito_enable_result or not mosquito_running:

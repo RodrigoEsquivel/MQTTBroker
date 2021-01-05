@@ -7,10 +7,13 @@ from subscriber.SubEntity import SubEntity
 from publisher.PubEntity import PubEntity
 
 
-from utils.constants import SERVER_IP, SERVER_PORT, SERVER_USER, SERVER_PASSWORD, NEW_DEVICES_SUBSCRIBER_NAME, NEW_DEVICES_TOPIC, CLIENT_SUBSCRIBER_NAME, CLIENT_TOPIC, DELETE_DEVICES_TOPIC, DELETE_DEVICES_SUBSCRIBER_NAME
+from utils.constants import SUDO_PASSWORD, SERVER_IP, SERVER_PORT, SERVER_USER, SERVER_PASSWORD, NEW_DEVICES_SUBSCRIBER_NAME, NEW_DEVICES_TOPIC, CLIENT_SUBSCRIBER_NAME, CLIENT_TOPIC, DELETE_DEVICES_TOPIC, DELETE_DEVICES_SUBSCRIBER_NAME
 
 def insert_new_device(client, userdata, message):
+    
     device_name = mqtt_to_string(message)
+    if not device_name:
+        return
     current_time = datetime.now().strftime("%H:%M:%S")
 
     database_connection = Database()
@@ -46,8 +49,12 @@ def insert_new_device(client, userdata, message):
     general_sub = SubEntity(subscribrer_id, SERVER_IP, SERVER_PORT, SERVER_USER, SERVER_PASSWORD)
     general_sub.connect_and_subscribe_to_topic(device_name, general_listen_and_insert)
 
+    pub = PubEntity("cliente4", SERVER_IP, SERVER_PORT, SERVER_USER, SERVER_PASSWORD)
+    pub.connect_and_publish_to_topic(NEW_DEVICES_TOPIC, "")
     # All topics when new device
     publish_all_devices()
+   
+
      
 
 def general_listen_and_insert(client, userdata, message):
@@ -89,6 +96,8 @@ def listen_and_insert_ip_from_camera(client, userdata, message):
 """
 def delete_device(client, userdata, message):
     received_value = mqtt_to_string(message)
+    if not received_value:
+        return
     device_type = get_device_type(received_value)
     database_connection = Database()
     device_id = database_connection.get_from("ID", Database.dispositivo_table, "Direccion", received_value)[0][0]
@@ -119,6 +128,9 @@ def delete_device(client, userdata, message):
         database_connection.delete_from_single(Database.actuador_table,actuador_id)
         database_connection.delete_from_single(Database.dispositivo_table,device_id)
     publish_all_devices()
+
+    pub = PubEntity("cliente6", SERVER_IP, SERVER_PORT, SERVER_USER, SERVER_PASSWORD)
+    pub.connect_and_publish_to_topic(DELETE_DEVICES_TOPIC, "")
 
     """
 def listen_client(client, userdata, message):
